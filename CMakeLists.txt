@@ -1,0 +1,17 @@
+project(advent-of-code-2021)
+cmake_minimum_required(VERSION 3.15)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+foreach(DAY IN ITEMS "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" "24" "25")
+    foreach(PUZZLE IN ITEMS "" "-01" "-02")
+        set(puzzle_dir "puzzle-${DAY}${PUZZLE}")
+        set(abs_puzzle_dir "${CMAKE_SOURCE_DIR}/${puzzle_dir}")
+        if (IS_DIRECTORY "${abs_puzzle_dir}")
+            message(STATUS "Adding puzzle directory: ${puzzle_dir}")
+            add_subdirectory("${puzzle_dir}")
+        endif()
+    endforeach()
+endforeach()

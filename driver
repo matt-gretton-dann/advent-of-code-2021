@@ -1,0 +1,59 @@
+#!/bin/sh
+set -eu
+
+# Find the source directory
+cwd="$(pwd)"
+cd "$(dirname "$0")"
+source_dir="$(pwd)"
+cd "${cwd}"
+
+# Parse command line options
+if [ $# -lt 2 -o $# -gt 3 ]; then
+    echo "Usage: $0 <day> <puzzle> [<input-file>]" >&2
+    exit 1
+fi
+
+day="$1"
+num="$2"
+
+if [ ${#day} -eq 1 ]; then
+    day="0${day}"
+fi
+
+puzzle="puzzle-${day}-${num}"
+
+if [ ! -d "${source_dir}/${puzzle}" ]; then
+    puzzle="puzzle-${day}"
+    if [ ! -d "${source_dir}/${puzzle}" ]; then
+      echo "Unable to find puzzle sources for day ${day} number ${num}" >&2
+      exit 2
+    fi
+fi
+
+if [ $# -eq 3 ]; then
+  input="$3"
+else
+  input="${source_dir}/${puzzle}/input-${day}-${num}.txt"
+fi
+
+if [ ! -e "${input}" ]; then
+  echo "Unable to find puzzle input: ${input}" >&2
+  exit 2
+fi
+
+exe="build/${puzzle}/${puzzle}"
+if [ ! -e "${exe}" ]; then
+    cmake -Bbuild -S "${source_dir}"
+    cmake --build build --target "${puzzle}"
+fi
+
+driver="${source_dir}/${puzzle}/driver"
+if [ -e "${driver}" ]; then
+    if [ ! -x "${driver}" ]; then
+      echo "Found driver script but it is not marked executable: ${driver}" >& 2
+      exit 2
+    fi
+    "${driver}" "${exe}" "${input}"
+else
+    "${exe}" <"${input}"
+fi
