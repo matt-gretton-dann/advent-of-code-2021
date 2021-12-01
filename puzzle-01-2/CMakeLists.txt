@@ -1,0 +1,1 @@
+add_executable(puzzle-01-2 main.cc)
