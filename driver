@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-# Find the source directory
+# Find the full path to the source directory
 cwd="$(pwd)"
 cd "$(dirname "$0")"
 source_dir="$(pwd)"
@@ -16,12 +16,14 @@ fi
 day="$1"
 num="$2"
 
+# Day should be zero padded.
 if [ ${#day} -eq 1 ]; then
     day="0${day}"
 fi
 
 puzzle="puzzle-${day}-${num}"
 
+# Work out which directory contains the puzzle (puzzle-DAY-NUM or puzzle-DAY).
 if [ ! -d "${source_dir}/${puzzle}" ]; then
     puzzle="puzzle-${day}"
     if [ ! -d "${source_dir}/${puzzle}" ]; then
@@ -30,6 +32,7 @@ if [ ! -d "${source_dir}/${puzzle}" ]; then
     fi
 fi
 
+# Find the input to use.
 if [ $# -eq 3 ]; then
   input="$3"
 else
@@ -41,12 +44,14 @@ if [ ! -e "${input}" ]; then
   exit 2
 fi
 
+# Always rebuild the target
 exe="build/${puzzle}/${puzzle}"
-if [ ! -e "${exe}" ]; then
+if [ ! -d "build"]; then
     cmake -Bbuild -S "${source_dir}"
-    cmake --build build --target "${puzzle}"
 fi
+cmake --build build --target "${puzzle}"
 
+# If we have a specific driver for the day use that otherwise just call the executable with the input.
 driver="${source_dir}/${puzzle}/driver"
 if [ -e "${driver}" ]; then
     if [ ! -x "${driver}" ]; then

@@ -10,24 +10,30 @@ Each Puzzle lies in its own directory named `puzzle-<day>-<number>`.
 The solutions are authored by Matthew Gretton-Dann, and Copyright 2021, Matthew Gretton-Dann.  Licensed under Apache 
 2.0 - see [license](./LICENSE).
 
-## Building
+## Running Puzzles
 
-The build system uses CMake:
+To run each puzzle do the following.
 
 ```sh
 git clone https://github.com/matt-gretton-dann/advent-of-code-2021/
 cd advent-of-code-2021
-cmake -Bbuild -S.
-cmake --build build
+DAY=01 # Puzzle day number
+PUZZLE=1 # Puzzle ID (1 or 2)
+INPUT=input1.txt # Path to input to use
+./driver $DAY $PUZZLE $INPUT
 ```
 
-To run each puzzle then do:
+The steps above will rebuild the puzzle code each time.
+
+## Building
+
+To build the puzzles without running them invoke cmake as follows:
 
 ```sh
-DAY=01
-PUZZLE=01
-INPUT=input1.txt
-./driver $DAY $PUZZLE [$INPUT]
+git clone https://github.com/matt-gretton-dann/advent-of-code-2021/
+cd advent-of-code-2021
+cmake -Bbuild -S. # Note the driver script also uses build.
+cmake --build build
 ```
 
 ## Sources
